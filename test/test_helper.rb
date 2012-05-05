@@ -10,4 +10,14 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+
+  def valid_attributes
+    return {:title => "TestPage",
+            :body_markup => "=== NEATO! ===\nThis is a test page"}
+  end
+
+  def valid_body_html_attribute
+    return "<h3>NEATO!</h3>\n<p>This is a test page</p>\n"
+  end
+  
 end
