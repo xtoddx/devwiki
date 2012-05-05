@@ -7,3 +7,8 @@
 index: 
  title: index
  body_markup:  This is a test page
+
+todd:
+ title: theboss
+ body_markup:  "=== NEATO! ===\nThis is a test page"
+ body_html:  A very patient man indeed
