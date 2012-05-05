@@ -31,16 +31,3 @@ class Page < ActiveRecord::Base
   end
 
 end
-
-class Page::Testing
-
-  def self.valid_attributes
-    return {:title => "TestPage",
-            :body_markup => "=== NEATO! ===\nThis is a test page"}
-  end
-
-  def self.valid_body_html_attribute
-    return "<h3>NEATO!</h3>\n<p>This is a test page</p>\n"
-  end
-
-end
