@@ -1,5 +1,5 @@
 class PagesController < ApplicationController
-  #after_filter :save_page_to_disk, :only => [:update, :create]
+  after_filter :save_page_to_disk, :only => [:create, :update]
   
   # GET /pages
   # GET /pages.json
@@ -54,6 +54,9 @@ class PagesController < ApplicationController
 
     respond_to do |format|
       if @page.save
+        @page_html = render_to_string "show"
+        debugger
+    
         format.html { redirect_to @page, notice: 'Page was successfully created.' }
         format.json { render json: @page, status: :created, location: @page }
       else
@@ -70,7 +73,9 @@ class PagesController < ApplicationController
 
     respond_to do |format|
       if @page.update_attributes(params[:page])
+        @page_html = render_to_string "show"
         debugger
+    
         format.html { redirect_to @page, notice: 'Page was successfully updated.' }
         format.json { head :no_content }
       else
@@ -92,16 +97,25 @@ class PagesController < ApplicationController
     end
   end
 
-  private
-    def save_page_to_disk
-      debugger
-      one = 1
-      #page_data = render_to_string "show"
-      base_dir = "public" + File.dirname(request.path)
-      #filename = @page.title + ".html"
-      #FileUtils.mkdir_p(base_dir)
-      #FileUtils.chdir(base_dir)
-      #File.open(filename, "w"){|f| f << page_data }
-    end
+  def fix_page_uris page_html
+    fixed_html = page_html
+    target = 'href="/pages"'
+    sub = 'href="' + request.url + '"'
+    # TODO
+    # - for links back to Edit or Destroy or other app behaviors put in
+    #   the full URL instead of the full path
+    # - for any images make sure we reference the static image location
+    #
+    return fixed_html
+  end
+  
+  def save_page_to_disk
+    html_data = self.fix_page_uris @page_html
+    basedir = "public/pages/"
+    filename = @page.title + ".html"
+    FileUtils.mkdir_p(basedir)
+    File.open(basedir + filename, "w"){|f| f << html_data}
+    debugger
+  end
     
 end
