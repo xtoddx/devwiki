@@ -1,5 +1,6 @@
 class PagesController < ApplicationController
   after_filter :save_page_to_disk, :only => [:create, :update]
+  append_after_filter :destroy_file_on_disk, :only => [:destroy]
   
   # GET /pages
   # GET /pages.json
@@ -118,4 +119,9 @@ class PagesController < ApplicationController
     debugger
   end
     
+  def destroy_file_on_disk
+    basedir = "public/pages/"
+    filename = @page.title + ".html"
+    FileUtils.rm(basedir + filename)    
+  end
 end
