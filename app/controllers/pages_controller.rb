@@ -1,5 +1,5 @@
 class PagesController < ApplicationController
-  after_filter :save_page_to_disk, :only => [:update, :create]
+  #after_filter :save_page_to_disk, :only => [:update, :create]
   
   # GET /pages
   # GET /pages.json
@@ -95,12 +95,13 @@ class PagesController < ApplicationController
   private
     def save_page_to_disk
       debugger
-      page_data = render_to_string "show"
+      one = 1
+      #page_data = render_to_string "show"
       base_dir = "public" + File.dirname(request.path)
-      filename = @page.title + ".html"
-      FileUtils.mkdir_p(base_dir)
-      FileUtils.chdir(base_dir)
-      File.open(filename, "w"){|f| f << page_data }
+      #filename = @page.title + ".html"
+      #FileUtils.mkdir_p(base_dir)
+      #FileUtils.chdir(base_dir)
+      #File.open(filename, "w"){|f| f << page_data }
     end
     
 end
