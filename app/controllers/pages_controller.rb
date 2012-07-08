@@ -50,6 +50,7 @@ class PagesController < ApplicationController
   def create
     @page = Page.new(params[:page])
 
+    debugger
     respond_to do |format|
       if @page.save
         format.html { redirect_to @page, notice: 'Page was successfully created.' }
