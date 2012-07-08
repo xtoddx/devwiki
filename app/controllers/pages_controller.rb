@@ -1,4 +1,5 @@
 class PagesController < ApplicationController
+
   # GET /pages
   # GET /pages.json
   def index
@@ -15,6 +16,10 @@ class PagesController < ApplicationController
   def show
     @page = Page[params[:id]]
 
+    debugger
+    page_data = render_to_string
+    self.save_page_to_disk page_data
+    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @page }
@@ -26,7 +31,7 @@ class PagesController < ApplicationController
         render action: 'edit', status: '404'
       end
       format.json { head :no_content, status: '404' }
-    end
+    end  
   end
 
   # GET /pages/new
@@ -34,6 +39,7 @@ class PagesController < ApplicationController
   def new
     @page = Page.new
 
+    debugger
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @page }
@@ -67,6 +73,8 @@ class PagesController < ApplicationController
   def update
     @page = Page[params[:id]]
 
+    debugger
+    
     respond_to do |format|
       if @page.update_attributes(params[:page])
         format.html { redirect_to @page, notice: 'Page was successfully updated.' }
@@ -82,8 +90,11 @@ class PagesController < ApplicationController
   # DELETE /pages/1.json
   def destroy
     @page = Page[params[:id]]
+    debugger
     @page.destroy
 
+    self.delete_page_from_disk
+    
     respond_to do |format|
       format.html { redirect_to pages_url }
       format.json { head :no_content }
