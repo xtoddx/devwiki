@@ -1,5 +1,6 @@
 class PagesController < ApplicationController
-
+  after_filter :save_page_to_disk, :only => [:update, :create]
+  
   # GET /pages
   # GET /pages.json
   def index
@@ -16,10 +17,6 @@ class PagesController < ApplicationController
   def show
     @page = Page[params[:id]]
 
-    debugger
-    page_data = render_to_string
-    self.save_page_to_disk page_data
-    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @page }
@@ -39,7 +36,6 @@ class PagesController < ApplicationController
   def new
     @page = Page.new
 
-    debugger
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @page }
@@ -56,7 +52,6 @@ class PagesController < ApplicationController
   def create
     @page = Page.new(params[:page])
 
-    debugger
     respond_to do |format|
       if @page.save
         format.html { redirect_to @page, notice: 'Page was successfully created.' }
@@ -73,10 +68,9 @@ class PagesController < ApplicationController
   def update
     @page = Page[params[:id]]
 
-    debugger
-    
     respond_to do |format|
       if @page.update_attributes(params[:page])
+        debugger
         format.html { redirect_to @page, notice: 'Page was successfully updated.' }
         format.json { head :no_content }
       else
@@ -90,14 +84,23 @@ class PagesController < ApplicationController
   # DELETE /pages/1.json
   def destroy
     @page = Page[params[:id]]
-    debugger
     @page.destroy
 
-    self.delete_page_from_disk
-    
     respond_to do |format|
       format.html { redirect_to pages_url }
       format.json { head :no_content }
     end
   end
+
+  private
+    def save_page_to_disk
+      debugger
+      page_data = render_to_string "show"
+      base_dir = "public" + File.dirname(request.path)
+      filename = @page.title + ".html"
+      FileUtils.mkdir_p(base_dir)
+      FileUtils.chdir(base_dir)
+      File.open(filename, "w"){|f| f << page_data }
+    end
+    
 end
